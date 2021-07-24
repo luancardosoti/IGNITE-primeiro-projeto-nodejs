@@ -33,7 +33,7 @@ function getBalance(statement) {
   return balance;
 }
 
-app.post('/accounts', (request, response) => {
+app.post('/account', (request, response) => {
   const { name, cpf } = request.body;
 
   const customerAlreadyExists = customers.some(
@@ -55,7 +55,7 @@ app.post('/accounts', (request, response) => {
 });
 
 // app.use(verifyIfExistsAccountCPF);
-app.get('/statements', verifyIfExistsAccountCPF, (request, response) => {
+app.get('/statement', verifyIfExistsAccountCPF, (request, response) => {
   const { customer } = request;
 
   return response.json(customer.statement);
@@ -98,7 +98,7 @@ app.post('/withdraw', verifyIfExistsAccountCPF, (request, response) => {
   return response.status(201).send();
 });
 
-app.get('/statements/date', verifyIfExistsAccountCPF, (request, response) => {
+app.get('/statement/date', verifyIfExistsAccountCPF, (request, response) => {
   const { customer } = request;
   const { date } = request.query;
 
@@ -111,6 +111,21 @@ app.get('/statements/date', verifyIfExistsAccountCPF, (request, response) => {
   );
 
   return response.json(statement);
+});
+
+app.put('/account', verifyIfExistsAccountCPF, (request, response) => {
+  const { name } = request.body;
+  const { customer } = request;
+
+  customer.name = name;
+
+  return response.status(200).send();
+});
+
+app.get('/account', verifyIfExistsAccountCPF, (request, response) => {
+  const { customer } = request;
+
+  return response.json(customer);
 });
 
 app.listen(3333);
